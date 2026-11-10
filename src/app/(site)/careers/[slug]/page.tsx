@@ -4,10 +4,15 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { lines } from "@/lib/utils";
 import { ApplyForm } from "@/components/ApplyForm";
-import { Chevrons } from "@/components/Chevrons";
-import { BoxLabel, Chip, Container, SectionLabel } from "@/components/ui";
+import { Bullet, Chip, Container, PageHero, SectionLabel } from "@/components/ui";
 
 type Props = { params: Promise<{ slug: string }> };
+
+// Pre-render every published job; new ones render on first visit and are cached.
+export async function generateStaticParams() {
+  const rows = await prisma.job.findMany({ where: { published: true }, select: { slug: true } });
+  return rows.map((r) => ({ slug: r.slug }));
+}
 
 async function getJob(slug: string) {
   return prisma.job.findFirst({ where: { slug, published: true } });
@@ -25,16 +30,7 @@ export default async function JobPage({ params }: Props) {
   return (
     <>
       {/* Mirrors the hiring flyer layout */}
-      <section className="relative overflow-hidden">
-        <Chevrons className="absolute -right-40 top-16 h-[600px] sm:-right-10" />
-        <Container className="relative py-20 sm:py-24">
-          <Link href="/careers" className="text-sm text-muted hover:text-white">← All roles</Link>
-          <div className="mt-10">
-            <BoxLabel>We&apos;re hiring</BoxLabel>
-          </div>
-          <h1 className="mt-10 max-w-3xl text-[clamp(2.75rem,8vw,5.5rem)] font-extrabold leading-[0.98] tracking-[-0.035em]">
-            {job.title}
-          </h1>
+      <PageHero back={{ href: "/careers", label: "All roles" }} label="We're hiring" title={job.title}>
           <div className="mt-10 flex flex-wrap gap-3">
             <Chip solid>{job.location}</Chip>
             {job.employment && <Chip>{job.employment}</Chip>}
@@ -42,13 +38,16 @@ export default async function JobPage({ params }: Props) {
             {job.daysOff && <Chip>{job.daysOff}</Chip>}
           </div>
           {job.summary && <p className="mt-10 max-w-2xl text-lg leading-relaxed text-muted">{job.summary}</p>}
+          <div className="mt-10">
+            <Link href="#apply" className="btn-solid">Apply now</Link>
+          </div>
 
           <div className="mt-16 grid gap-12 md:grid-cols-2">
             <div>
               <SectionLabel>What you&apos;ll do</SectionLabel>
               <ul className="mt-6 space-y-5">
                 {lines(job.responsibilities).map((r) => (
-                  <li key={r} className="text-lg leading-relaxed">→ {r}</li>
+                  <li key={r} className="flex gap-3 text-lg leading-relaxed"><Bullet />{r}</li>
                 ))}
               </ul>
             </div>
@@ -56,16 +55,15 @@ export default async function JobPage({ params }: Props) {
               <SectionLabel>What we&apos;re looking for</SectionLabel>
               <ul className="mt-6 space-y-5">
                 {lines(job.requirements).map((r) => (
-                  <li key={r} className="text-lg leading-relaxed">→ {r}</li>
+                  <li key={r} className="flex gap-3 text-lg leading-relaxed"><Bullet />{r}</li>
                 ))}
               </ul>
             </div>
           </div>
-        </Container>
-      </section>
+      </PageHero>
 
       <section id="apply" className="border-t border-line">
-        <Container className="grid gap-12 py-20 lg:grid-cols-[1fr_1.6fr]">
+        <Container data-reveal className="grid gap-12 py-20 lg:grid-cols-[1fr_1.6fr]">
           <div>
             <SectionLabel>Apply</SectionLabel>
             <h2 className="mt-5 text-4xl font-bold leading-tight tracking-tight">Apply for this role</h2>

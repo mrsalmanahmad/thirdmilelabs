@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { submitApplication, type FormState } from "@/actions/public";
 import { Field, Honeypot } from "./Field";
+import { ArrowRight } from "./ui";
 
 export function ApplyForm({ jobId }: { jobId: number }) {
   const [state, action, pending] = useActionState<FormState, FormData>(submitApplication, null);
@@ -47,8 +48,8 @@ export function ApplyForm({ jobId }: { jobId: number }) {
       </div>
       {state && !state.ok && state.message && <p className="text-sm text-red-400 sm:col-span-2">{state.message}</p>}
       <div className="sm:col-span-2">
-        <button type="submit" disabled={pending} className="btn-solid disabled:opacity-60">
-          {pending ? "Submitting…" : "Submit application →"}
+        <button type="submit" disabled={pending} aria-busy={pending} className="btn-solid w-full disabled:cursor-wait disabled:opacity-60 sm:w-auto">
+          {pending ? "Submitting…" : <>Submit application <ArrowRight /></>}
         </button>
       </div>
     </form>

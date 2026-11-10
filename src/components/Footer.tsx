@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Settings } from "@/lib/settings";
 import { Logo } from "./Logo";
+import { ArrowUpRight } from "./ui";
 
 export function Footer({ s }: { s: Settings }) {
   const socials = [
@@ -12,7 +13,7 @@ export function Footer({ s }: { s: Settings }) {
   ].filter((l) => l.href);
 
   return (
-    <footer className="border-t border-line">
+    <footer className="relative overflow-hidden border-t border-line">
       <div className="mx-auto grid w-full max-w-6xl gap-12 px-5 py-16 sm:px-8 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
         <div>
           <Logo />
@@ -37,6 +38,7 @@ export function Footer({ s }: { s: Settings }) {
             <li><a href={`mailto:${s.contactEmail}`}>{s.contactEmail}</a></li>
             {s.contactPhone && <li><a href={`tel:${s.contactPhone.replace(/\s/g, "")}`}>{s.contactPhone}</a></li>}
             <li className="text-muted">{s.address}</li>
+            {s.officeHours && <li className="text-muted">{s.officeHours}</li>}
           </ul>
         </div>
 
@@ -46,7 +48,9 @@ export function Footer({ s }: { s: Settings }) {
             <ul className="footer-list">
               {socials.map((l) => (
                 <li key={l.label}>
-                  <a href={l.href} target="_blank" rel="noopener noreferrer">{l.label} ↗</a>
+                  <a href={l.href} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-1.5">
+                    {l.label} <ArrowUpRight className="h-3.5 w-3.5" />
+                  </a>
                 </li>
               ))}
             </ul>
@@ -54,10 +58,17 @@ export function Footer({ s }: { s: Settings }) {
         )}
       </div>
 
-      <div className="border-t border-line">
+      {/* Oversized wordmark, cropped by the bottom edge */}
+      <div className="mx-auto w-full max-w-6xl px-5 sm:px-8" aria-hidden="true">
+        <p className="font-display -mb-[0.22em] select-none whitespace-nowrap text-[clamp(3.5rem,15.5vw,11.5rem)] font-bold leading-none tracking-[-0.05em] text-ghost">
+          THIRD MILE
+        </p>
+      </div>
+
+      <div className="relative border-t border-line bg-ink">
         <div className="mx-auto flex w-full max-w-6xl flex-col justify-between gap-2 px-5 py-6 text-xs text-muted sm:flex-row sm:px-8">
           <p>© {new Date().getFullYear()} Third Mile Labs. All rights reserved.</p>
-          <p>thirdmilelabs.com</p>
+          <p className="font-mono">thirdmilelabs.com</p>
         </div>
       </div>
     </footer>
