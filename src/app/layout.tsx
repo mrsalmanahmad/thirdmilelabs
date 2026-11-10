@@ -1,11 +1,29 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { NavProgress } from "@/components/NavProgress";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin"] });
-const display = Space_Grotesk({ variable: "--font-space-grotesk", subsets: ["latin"], weight: ["500", "600", "700"] });
-const mono = JetBrains_Mono({ variable: "--font-jetbrains", subsets: ["latin"], weight: ["400", "500"] });
+// Self-hosted from @fontsource-variable packages (latin, variable weight), so
+// builds never depend on fetching from Google Fonts.
+const inter = localFont({
+  src: "../../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2",
+  variable: "--font-inter",
+  weight: "100 900",
+  display: "swap",
+});
+const display = localFont({
+  src: "../../node_modules/@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2",
+  variable: "--font-space-grotesk",
+  weight: "300 700",
+  display: "swap",
+});
+const mono = localFont({
+  src: "../../node_modules/@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2",
+  variable: "--font-jetbrains",
+  weight: "100 800",
+  display: "swap",
+  preload: false, // only used for small labels
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.SITE_URL ?? "https://thirdmilelabs.com"),
