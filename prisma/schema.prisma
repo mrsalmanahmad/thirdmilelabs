@@ -1,0 +1,85 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// SQLite for local dev / single-server hosting.
+// For serverless hosting (e.g. Vercel) switch provider to "postgresql"
+// and point DATABASE_URL at Neon / Supabase.
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Free-form editable site copy (hero text, contact info, socials...)
+model Setting {
+  key   String @id
+  value String
+}
+
+model Service {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String
+  details     String  @default("") // one bullet per line
+  order       Int     @default(0)
+  highlighted Boolean @default(false)
+}
+
+model Project {
+  id          Int      @id @default(autoincrement())
+  slug        String   @unique
+  name        String
+  url         String
+  category    String
+  tagline     String
+  description String
+  tags        String   @default("") // comma separated
+  year        String   @default("")
+  order       Int      @default(0)
+  featured    Boolean  @default(true)
+  published   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
+
+model Job {
+  id               Int           @id @default(autoincrement())
+  slug             String        @unique
+  title            String
+  location         String        @default("Lahore")
+  employment       String        @default("Full-time · On-site")
+  hours            String        @default("10 AM – 7 PM")
+  daysOff          String        @default("Fri & Sat off")
+  summary          String        @default("")
+  responsibilities String        @default("") // one per line
+  requirements     String        @default("") // one per line
+  published        Boolean       @default(true)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  applications     Application[]
+}
+
+model Application {
+  id        Int      @id @default(autoincrement())
+  jobId     Int
+  job       Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  name      String
+  email     String
+  phone     String   @default("")
+  cvUrl     String
+  linkedin  String   @default("")
+  message   String   @default("")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  company   String   @default("")
+  service   String   @default("")
+  budget    String   @default("")
+  message   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
