@@ -1,13 +1,14 @@
 # Third Mile Labs — thirdmilelabs.com
 
-Company website with a built-in admin portal. Next.js 15 (App Router) · Tailwind CSS v4 · Prisma · SQLite.
+Company website with a built-in admin portal. Next.js 15 (App Router) · Tailwind CSS v4 · Prisma · Postgres.
 
 ## Quick start
 
 ```bash
+docker run -d --name tml-postgres -e POSTGRES_PASSWORD=postgres -p 5434:5432 postgres:16
 npm install
 cp .env.example .env          # then set ADMIN_PASSWORD and AUTH_SECRET
-npm run db:migrate            # creates prisma/dev.db
+npm run db:migrate            # creates the tables
 npm run db:seed               # services, Svvari + Specfire, the two open roles
 npm run dev                   # http://localhost:3000
 ```
@@ -53,15 +54,19 @@ src/middleware.ts           protects /admin
 
 ## Deploying
 
-**VPS / Railway / Render (with a persistent disk):** keep SQLite.
+**Vercel** (current setup): the project uses the Prisma Postgres integration, which provides
+`DATABASE_URL`. Set `ADMIN_PASSWORD` and `AUTH_SECRET` (and optionally `SITE_URL`) in the
+project's environment variables. Every deploy runs the `vercel-build` script:
+
+```bash
+prisma migrate deploy && node prisma/seed.mjs --if-empty && next build
+```
+
+Migrations apply automatically, and the seed only runs against an empty database, so
+content edited or deleted in the admin panel is never overwritten.
+
+**Any other Node host:** point `DATABASE_URL` at a Postgres database and run
 
 ```bash
 npm ci && npm run db:deploy && npm run db:seed && npm run build && npm start
 ```
-
-Point `DATABASE_URL` at a file on the persistent volume.
-
-**Vercel (serverless):** SQLite won't persist there. Create a Postgres database (Neon or Supabase),
-change `provider = "postgresql"` in `prisma/schema.prisma`, delete `prisma/migrations`, run
-`npx prisma migrate dev --name init` against it, and set `DATABASE_URL`, `ADMIN_PASSWORD`,
-`AUTH_SECRET`, `SITE_URL` in the Vercel project settings.
