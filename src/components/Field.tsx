@@ -14,7 +14,7 @@ export function Field(props: Props) {
   const id = `f-${name}`;
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-xs font-semibold uppercase tracking-[0.2em] text-muted">
+      <label htmlFor={id} className="label-mono mb-2.5 block text-muted">
         {label}
         {required && <span className="text-white"> *</span>}
       </label>

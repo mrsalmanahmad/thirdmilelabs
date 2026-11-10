@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import { getSettings } from "@/lib/settings";
-import { Chevrons } from "@/components/Chevrons";
 import { JobRow } from "@/components/JobRow";
-import { BoxLabel, Chip, Container, SectionLabel } from "@/components/ui";
+import { Chip, Container, PageHero, SectionLabel } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Careers",
@@ -24,26 +23,22 @@ export default async function CareersPage() {
 
   return (
     <>
-      <section className="relative overflow-hidden">
-        <Chevrons className="chevrons-in absolute -right-40 top-0 h-[560px] sm:-right-10" />
-        <Container className="rise relative py-20 sm:py-28">
-          <BoxLabel>{jobs.length > 0 ? "We're hiring" : "Careers"}</BoxLabel>
-          <h1 className="mt-10 max-w-4xl text-[clamp(2.5rem,7vw,5rem)] font-extrabold leading-[1] tracking-[-0.03em]">
-            Build what&apos;s next with us.
-          </h1>
-          <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted">{s.careersIntro}</p>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <Chip solid>Lahore</Chip>
-            <Chip>On-site</Chip>
-            <Chip>10 AM – 7 PM</Chip>
-            <Chip>Fri &amp; Sat off</Chip>
-          </div>
-        </Container>
-      </section>
+      <PageHero
+        label={jobs.length > 0 ? "We're hiring" : "Careers"}
+        title={<>Build what&apos;s next with us.</>}
+        intro={s.careersIntro}
+      >
+        <div className="mt-10 flex flex-wrap gap-3">
+          <Chip solid>Lahore</Chip>
+          <Chip>On-site</Chip>
+          <Chip>10 AM – 7 PM</Chip>
+          <Chip>Fri &amp; Sat off</Chip>
+        </div>
+      </PageHero>
 
       <section className="border-t border-line">
         <Container className="py-20">
-          <SectionLabel>Open roles ({jobs.length})</SectionLabel>
+          <SectionLabel>Open roles · {String(jobs.length).padStart(2, "0")}</SectionLabel>
           <div data-reveal="stagger" className="mt-8 border-t border-line">
             {jobs.map((j) => (
               <JobRow key={j.id} job={j} />
@@ -60,13 +55,17 @@ export default async function CareersPage() {
       </section>
 
       <section className="border-t border-line">
-        <Container data-reveal="stagger" className="grid gap-5 py-20 md:grid-cols-3">
-          {PERKS.map((p) => (
-            <div key={p.title} className="card p-8">
-              <h3 className="text-xl font-bold">{p.title}</h3>
+        <Container className="py-20">
+          <SectionLabel className="mb-8">Why join</SectionLabel>
+          <div data-reveal="stagger" className="grid gap-5 md:grid-cols-3">
+          {PERKS.map((p, i) => (
+            <div key={p.title} className="card spotlight p-8">
+              <p className="label-mono text-muted">{String(i + 1).padStart(2, "0")}</p>
+              <h3 className="mt-6 text-xl font-bold">{p.title}</h3>
               <p className="mt-3 leading-relaxed text-muted">{p.body}</p>
             </div>
           ))}
+          </div>
         </Container>
       </section>
     </>

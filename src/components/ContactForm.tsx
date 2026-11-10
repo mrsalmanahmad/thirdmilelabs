@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { submitContact, type FormState } from "@/actions/public";
 import { Field, Honeypot } from "./Field";
+import { ArrowRight } from "./ui";
 
 const BUDGETS = ["Not sure yet", "Under $5k", "$5k – $15k", "$15k – $40k", "$40k+"];
 
@@ -12,8 +13,8 @@ export function ContactForm({ services }: { services: string[] }) {
   if (state?.ok && state.message) {
     return (
       <div className="border border-white bg-white p-10 text-ink">
-        <p className="text-xs font-semibold uppercase tracking-[0.3em] text-ink/60">Message sent</p>
-        <p className="mt-4 text-2xl font-bold tracking-tight">{state.message}</p>
+        <p className="label-mono text-ink/60">Message sent</p>
+        <p className="font-display mt-4 text-2xl font-bold tracking-tight">{state.message}</p>
       </div>
     );
   }
@@ -40,7 +41,7 @@ export function ContactForm({ services }: { services: string[] }) {
             {BUDGETS.map((b, i) => (
               <label key={b} className="cursor-pointer">
                 <input type="radio" name="budget" value={b} defaultChecked={i === 0} className="peer sr-only" />
-                <span className="inline-block border border-line-strong px-4 py-2 text-sm text-muted transition peer-checked:border-white peer-checked:bg-white peer-checked:text-ink peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-white">
+                <span className="inline-flex min-h-11 items-center border border-field px-4 text-sm text-muted transition-colors duration-200 hover:border-neutral-400 hover:text-white peer-checked:border-white peer-checked:bg-white peer-checked:text-ink peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-white">
                   {b}
                 </span>
               </label>
@@ -61,8 +62,8 @@ export function ContactForm({ services }: { services: string[] }) {
       </div>
       {state && !state.ok && state.message && <p className="text-sm text-red-400 sm:col-span-2">{state.message}</p>}
       <div className="sm:col-span-2">
-        <button type="submit" disabled={pending} className="btn-solid disabled:opacity-60">
-          {pending ? "Sending…" : "Send message →"}
+        <button type="submit" disabled={pending} aria-busy={pending} className="btn-solid w-full disabled:cursor-wait disabled:opacity-60 sm:w-auto">
+          {pending ? "Sending…" : <>Send message <ArrowRight /></>}
         </button>
       </div>
     </form>

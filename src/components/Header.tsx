@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Logo } from "./Logo";
+import { ArrowRight } from "./ui";
 
 const NAV = [
   { href: "/services", label: "Services" },
@@ -50,13 +51,14 @@ export function Header({ openRoles }: { openRoles: number }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`group relative py-1 text-sm font-medium transition-colors duration-200 ${
+                aria-current={active ? "page" : undefined}
+                className={`group relative py-2 text-sm font-medium transition-colors duration-200 ${
                   active ? "text-white" : "text-muted hover:text-white"
                 }`}
               >
                 {item.label}
                 {item.href === "/careers" && openRoles > 0 && (
-                  <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center bg-white px-1 text-[11px] font-semibold text-ink">
+                  <span className="ml-2 inline-flex h-5 min-w-5 items-center justify-center bg-white px-1 font-mono text-[11px] font-medium text-ink">
                     {openRoles}
                   </span>
                 )}
@@ -69,13 +71,13 @@ export function Header({ openRoles }: { openRoles: number }) {
             );
           })}
           <Link href="/contact" className="btn-solid !py-2.5 !text-sm">
-            Start a project
+            Start a project <ArrowRight />
           </Link>
         </nav>
 
         <button
           type="button"
-          className="flex h-10 w-10 items-center justify-center border border-line-strong transition-colors hover:border-white md:hidden"
+          className="flex h-11 w-11 cursor-pointer items-center justify-center border border-line-strong transition-colors hover:border-white md:hidden"
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
           aria-controls="mobile-nav"
@@ -106,8 +108,9 @@ export function Header({ openRoles }: { openRoles: number }) {
               <Link
                 key={item.href}
                 href={item.href}
+                aria-current={pathname.startsWith(item.href) ? "page" : undefined}
                 style={{ transitionDelay: open ? `${80 + i * 50}ms` : "0ms" }}
-                className={`flex items-center justify-between border-b border-line py-5 text-2xl font-bold tracking-tight transition-all duration-500 ease-out ${
+                className={`font-display flex items-center justify-between border-b border-line py-5 text-3xl font-bold tracking-tight transition-all duration-500 ease-out ${
                   open ? "translate-y-0 opacity-100" : "-translate-y-2 opacity-0"
                 } ${pathname.startsWith(item.href) ? "text-white" : "text-white/80"}`}
               >
@@ -117,7 +120,7 @@ export function Header({ openRoles }: { openRoles: number }) {
                     <span className="ml-2 text-sm font-medium text-muted">({openRoles} open)</span>
                   )}
                 </span>
-                <span className="text-muted">→</span>
+                <ArrowRight className="h-5 w-5 text-muted" />
               </Link>
             ))}
             <Link
