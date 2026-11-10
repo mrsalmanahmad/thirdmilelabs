@@ -27,8 +27,8 @@ export default async function HomePage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <Chevrons className="absolute -right-40 top-10 h-[640px] sm:-right-16 lg:right-0" />
-        <Container className="relative pb-24 pt-20 sm:pb-32 sm:pt-28">
+        <Chevrons className="chevrons-in absolute -right-40 top-10 h-[640px] sm:-right-16 lg:right-0" />
+        <Container className="rise relative pb-24 pt-20 sm:pb-32 sm:pt-28">
           <BoxLabel>{s.heroEyebrow}</BoxLabel>
           <h1 className="mt-10 max-w-4xl text-[clamp(2.75rem,8vw,6rem)] font-extrabold leading-[0.98] tracking-[-0.035em]">
             {s.heroTitle}
@@ -44,7 +44,7 @@ export default async function HomePage() {
       {/* Services */}
       <section className="border-t border-line">
         <Container className="py-24 sm:py-28">
-          <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div data-reveal className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>
               <SectionLabel>What we build</SectionLabel>
               <h2 className="mt-5 max-w-2xl text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">
@@ -63,7 +63,7 @@ export default async function HomePage() {
       {projects.length > 0 && (
         <section className="border-t border-line">
           <Container className="py-24 sm:py-28">
-            <div className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
+            <div data-reveal className="mb-14 flex flex-col justify-between gap-6 md:flex-row md:items-end">
               <div>
                 <SectionLabel>Selected work</SectionLabel>
                 <h2 className="mt-5 max-w-2xl text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">
@@ -74,7 +74,7 @@ export default async function HomePage() {
                 All projects <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </Link>
             </div>
-            <div className="grid gap-5 lg:grid-cols-2">
+            <div data-reveal="stagger" className="grid gap-5 lg:grid-cols-2">
               {projects.map((p, i) => (
                 <ProjectCard key={p.id} project={p} index={i} />
               ))}
@@ -85,7 +85,7 @@ export default async function HomePage() {
 
       {/* About / why */}
       <section className="border-t border-line">
-        <Container className="grid gap-14 py-24 sm:py-28 lg:grid-cols-2">
+        <Container data-reveal className="grid gap-14 py-24 sm:py-28 lg:grid-cols-2">
           <div>
             <SectionLabel>Why Third Mile</SectionLabel>
             <h2 className="mt-5 text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">{s.aboutTitle}</h2>
@@ -94,7 +94,7 @@ export default async function HomePage() {
         </Container>
         <Container className="pb-24 sm:pb-28">
           <SectionLabel className="mb-8">How we work</SectionLabel>
-          <ol className="grid border-l border-t border-line-strong sm:grid-cols-2 lg:grid-cols-4">
+          <ol data-reveal="stagger" className="grid border-l border-t border-line-strong sm:grid-cols-2 lg:grid-cols-4">
             {PROCESS.map((step, i) => (
               <li key={step.title} className="border-b border-r border-line-strong p-8">
                 <p className="text-sm font-semibold tracking-[0.2em] text-muted">0{i + 1}</p>
@@ -110,7 +110,7 @@ export default async function HomePage() {
       {jobs.length > 0 && (
         <section className="border-t border-line">
           <Container className="py-24 sm:py-28">
-            <div className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
+            <div data-reveal className="flex flex-col justify-between gap-8 md:flex-row md:items-end">
               <div>
                 <BoxLabel>We&apos;re hiring</BoxLabel>
                 <h2 className="mt-8 max-w-2xl text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">
@@ -121,7 +121,7 @@ export default async function HomePage() {
                 All open roles <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
               </Link>
             </div>
-            <div className="mt-10 border-t border-line">
+            <div data-reveal="stagger" className="mt-10 border-t border-line">
               {jobs.slice(0, 4).map((j) => (
                 <JobRow key={j.id} job={j} />
               ))}

@@ -3,7 +3,7 @@ import { pad2 } from "@/lib/utils";
 
 export function ServiceGrid({ services }: { services: Service[] }) {
   return (
-    <div className="grid gap-5 sm:grid-cols-2">
+    <div data-reveal="stagger" className="grid gap-5 sm:grid-cols-2">
       {services.map((s, i) => (
         <article
           key={s.id}

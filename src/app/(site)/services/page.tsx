@@ -17,8 +17,8 @@ export default async function ServicesPage() {
   return (
     <>
       <section className="relative overflow-hidden">
-        <Chevrons className="absolute -right-40 top-0 h-[520px] sm:-right-10" />
-        <Container className="relative py-20 sm:py-28">
+        <Chevrons className="chevrons-in absolute -right-40 top-0 h-[520px] sm:-right-10" />
+        <Container className="rise relative py-20 sm:py-28">
           <BoxLabel>What we build</BoxLabel>
           <h1 className="mt-10 max-w-4xl text-[clamp(2.5rem,7vw,5rem)] font-extrabold leading-[1] tracking-[-0.03em]">
             Services built around shipping.
@@ -33,6 +33,7 @@ export default async function ServicesPage() {
         <Container className="py-8">
           {services.map((svc, i) => (
             <article
+              data-reveal
               key={svc.id}
               id={`service-${svc.id}`}
               className="grid gap-6 border-b border-line py-14 last:border-b-0 md:grid-cols-[120px_1fr_1fr]"

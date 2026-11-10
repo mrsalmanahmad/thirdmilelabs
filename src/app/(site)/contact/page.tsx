@@ -18,8 +18,8 @@ export default async function ContactPage() {
 
   return (
     <section className="relative overflow-hidden">
-      <Chevrons className="absolute -right-48 top-0 h-[560px] opacity-80 sm:-right-24" />
-      <Container className="relative py-20 sm:py-28">
+      <Chevrons className="chevrons-in absolute -right-48 top-0 h-[560px] opacity-80 sm:-right-24" />
+      <Container className="rise relative py-20 sm:py-28">
         <BoxLabel>Contact us</BoxLabel>
         <h1 className="mt-10 max-w-4xl text-[clamp(2.5rem,7vw,5rem)] font-extrabold leading-[1] tracking-[-0.03em]">
           {s.ctaTitle}

@@ -10,6 +10,12 @@ import { BoxLabel, Chip, Container, SectionLabel } from "@/components/ui";
 
 type Props = { params: Promise<{ slug: string }> };
 
+// Pre-render every published project; new ones render on first visit and are cached.
+export async function generateStaticParams() {
+  const rows = await prisma.project.findMany({ where: { published: true }, select: { slug: true } });
+  return rows.map((r) => ({ slug: r.slug }));
+}
+
 async function getProject(slug: string) {
   return prisma.project.findFirst({ where: { slug, published: true } });
 }
@@ -32,8 +38,8 @@ export default async function ProjectPage({ params }: Props) {
   return (
     <>
       <section className="relative overflow-hidden">
-        <Chevrons className="absolute -right-40 top-0 h-[560px] sm:-right-10" />
-        <Container className="relative py-20 sm:py-28">
+        <Chevrons className="chevrons-in absolute -right-40 top-0 h-[560px] sm:-right-10" />
+        <Container className="rise relative py-20 sm:py-28">
           <Link href="/work" className="text-sm text-muted hover:text-white">← All work</Link>
           <div className="mt-10">
             <BoxLabel>{project.category}</BoxLabel>
@@ -51,7 +57,7 @@ export default async function ProjectPage({ params }: Props) {
       </section>
 
       <section className="border-t border-line">
-        <Container className="grid gap-14 py-20 lg:grid-cols-[1fr_320px]">
+        <Container data-reveal className="grid gap-14 py-20 lg:grid-cols-[1fr_320px]">
           <div>
             <SectionLabel>Overview</SectionLabel>
             <div className="prose-tml mt-6 max-w-2xl text-lg leading-relaxed">
@@ -83,7 +89,7 @@ export default async function ProjectPage({ params }: Props) {
 
       {others.length > 0 && (
         <section className="border-t border-line">
-          <Container className="py-16">
+          <Container data-reveal className="py-16">
             <SectionLabel className="mb-6">More work</SectionLabel>
             <div className="border-t border-line">
               {others.map((o) => (

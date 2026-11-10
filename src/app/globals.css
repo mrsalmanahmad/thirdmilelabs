@@ -60,3 +60,108 @@ body {
     @apply mt-5;
   }
 }
+
+/* ---------- Motion ---------- */
+
+:root {
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Page transition (route templates re-mount on every navigation) */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.page-in {
+  animation: page-in 0.5s var(--ease-out-expo) both;
+}
+
+/* Hero entrance: children rise in one after another */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+.rise > * {
+  animation: rise 0.8s var(--ease-out-expo) both;
+}
+.rise > *:nth-child(2) { animation-delay: 70ms; }
+.rise > *:nth-child(3) { animation-delay: 140ms; }
+.rise > *:nth-child(4) { animation-delay: 210ms; }
+.rise > *:nth-child(5) { animation-delay: 280ms; }
+.rise > *:nth-child(6) { animation-delay: 350ms; }
+
+@keyframes chevrons-in {
+  from { opacity: 0; transform: translateX(40px); }
+  to { opacity: 1; transform: none; }
+}
+.chevrons-in {
+  animation: chevrons-in 1.2s var(--ease-out-expo) both 0.1s;
+}
+
+/* Scroll reveal (only hides content once JS has confirmed it can reveal it) */
+.reveal-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo);
+}
+.reveal-ready [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+/* data-reveal="stagger": each child animates in turn */
+.reveal-ready [data-reveal="stagger"] {
+  opacity: 1;
+  transform: none;
+}
+.reveal-ready [data-reveal="stagger"] > * {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s var(--ease-out-expo), transform 0.7s var(--ease-out-expo),
+    border-color 0.2s, background-color 0.2s, color 0.2s;
+}
+.reveal-ready [data-reveal="stagger"].is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+.reveal-ready [data-reveal="stagger"].is-visible > *:nth-child(2) { transition-delay: 60ms, 60ms, 0s, 0s, 0s; }
+.reveal-ready [data-reveal="stagger"].is-visible > *:nth-child(3) { transition-delay: 120ms, 120ms, 0s, 0s, 0s; }
+.reveal-ready [data-reveal="stagger"].is-visible > *:nth-child(4) { transition-delay: 180ms, 180ms, 0s, 0s, 0s; }
+.reveal-ready [data-reveal="stagger"].is-visible > *:nth-child(5) { transition-delay: 240ms, 240ms, 0s, 0s, 0s; }
+.reveal-ready [data-reveal="stagger"].is-visible > *:nth-child(6) { transition-delay: 300ms, 300ms, 0s, 0s, 0s; }
+.reveal-ready [data-reveal="stagger"].is-visible > *:nth-child(n + 7) { transition-delay: 360ms, 360ms, 0s, 0s, 0s; }
+
+/* Navigation progress bar */
+@keyframes nav-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(0.85); }
+}
+.nav-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 100;
+  height: 2px;
+  background: #fff;
+  transform-origin: left;
+  transform: scaleX(0);
+  opacity: 0;
+  pointer-events: none;
+}
+.nav-progress[data-state="loading"] {
+  opacity: 1;
+  animation: nav-progress 6s cubic-bezier(0.1, 0.7, 0.2, 1) forwards;
+}
+.nav-progress[data-state="done"] {
+  transform: scaleX(1);
+  opacity: 0;
+  transition: transform 0.2s ease-out, opacity 0.35s ease 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+}

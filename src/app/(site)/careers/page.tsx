@@ -25,8 +25,8 @@ export default async function CareersPage() {
   return (
     <>
       <section className="relative overflow-hidden">
-        <Chevrons className="absolute -right-40 top-0 h-[560px] sm:-right-10" />
-        <Container className="relative py-20 sm:py-28">
+        <Chevrons className="chevrons-in absolute -right-40 top-0 h-[560px] sm:-right-10" />
+        <Container className="rise relative py-20 sm:py-28">
           <BoxLabel>{jobs.length > 0 ? "We're hiring" : "Careers"}</BoxLabel>
           <h1 className="mt-10 max-w-4xl text-[clamp(2.5rem,7vw,5rem)] font-extrabold leading-[1] tracking-[-0.03em]">
             Build what&apos;s next with us.
@@ -44,7 +44,7 @@ export default async function CareersPage() {
       <section className="border-t border-line">
         <Container className="py-20">
           <SectionLabel>Open roles ({jobs.length})</SectionLabel>
-          <div className="mt-8 border-t border-line">
+          <div data-reveal="stagger" className="mt-8 border-t border-line">
             {jobs.map((j) => (
               <JobRow key={j.id} job={j} />
             ))}
@@ -60,7 +60,7 @@ export default async function CareersPage() {
       </section>
 
       <section className="border-t border-line">
-        <Container className="grid gap-5 py-20 md:grid-cols-3">
+        <Container data-reveal="stagger" className="grid gap-5 py-20 md:grid-cols-3">
           {PERKS.map((p) => (
             <div key={p.title} className="card p-8">
               <h3 className="text-xl font-bold">{p.title}</h3>

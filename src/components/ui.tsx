@@ -52,6 +52,14 @@ export function Arrow({ className = "" }: { className?: string }) {
   return <span className={`inline-block transition-transform group-hover:translate-x-1 ${className}`}>→</span>;
 }
 
-export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-6xl px-5 sm:px-8 ${className}`}>{children}</div>;
+export function Container({
+  children,
+  className = "",
+  ...rest
+}: { children: ReactNode; className?: string } & Omit<ComponentProps<"div">, "className" | "children">) {
+  return (
+    <div className={`mx-auto w-full max-w-6xl px-5 sm:px-8 ${className}`} {...rest}>
+      {children}
+    </div>
+  );
 }
