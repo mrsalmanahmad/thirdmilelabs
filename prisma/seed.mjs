@@ -92,6 +92,19 @@ const jobs = [
 ];
 
 async function main() {
+  // `--if-empty` (used by the Vercel build) seeds only a brand-new database,
+  // so content deleted in the admin panel isn't re-created on every deploy.
+  if (process.argv.includes("--if-empty")) {
+    const [services, projects, jobs] = await Promise.all([
+      prisma.service.count(),
+      prisma.project.count(),
+      prisma.job.count(),
+    ]);
+    if (services + projects + jobs > 0) {
+      console.log("Database already has content, skipping seed.");
+      return;
+    }
+  }
   if ((await prisma.service.count()) === 0) {
     for (const [i, s] of services.entries()) {
       await prisma.service.create({ data: { ...s, order: i + 1 } });
