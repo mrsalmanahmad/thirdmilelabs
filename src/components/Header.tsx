@@ -102,8 +102,10 @@ export function Header({ openRoles }: { openRoles: number }) {
           open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
-        <nav className="h-[calc(100dvh-5rem)] overflow-hidden" aria-label="Mobile">
-          <div className="flex flex-col border-t border-line px-5 py-4">
+        {/* The grid item must have no fixed height (and min-h-0 + overflow-hidden),
+            or the 0fr row can't collapse and the closed menu still fills the screen. */}
+        <nav className="min-h-0 overflow-hidden" aria-label="Mobile">
+          <div className="flex h-[calc(100dvh-5rem)] flex-col overflow-y-auto border-t border-line px-5 py-4">
             {NAV.map((item, i) => (
               <Link
                 key={item.href}
