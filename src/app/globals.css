@@ -9,18 +9,15 @@
   --color-line-strong: #3a3a3a;  /* card / chip borders */
   --color-ghost: #1e1e1e;        /* background chevrons */
   --color-muted: #a3a3a3;        /* secondary text (7.4:1 on ink) */
+  --color-paper: #f4f2ee;        /* light chapter background (home, mile 03) */
   --color-subtle: #8a8a8a;       /* placeholders (4.9:1 on raised) */
   --color-field: #6a6a6a;        /* input borders (3:1 on raised) */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-space-grotesk), var(--font-inter), ui-sans-serif, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, monospace;
 
-  --animate-marquee: marquee 40s linear infinite;
   --animate-pulse-dot: pulse-dot 2.4s ease-out infinite;
 
-  @keyframes marquee {
-    to { transform: translateX(-50%); }
-  }
   @keyframes pulse-dot {
     0% { box-shadow: 0 0 0 0 rgb(255 255 255 / 0.55); }
     70%, 100% { box-shadow: 0 0 0 8px rgb(255 255 255 / 0); }
@@ -136,12 +133,6 @@ body {
   .spotlight:hover::before { opacity: 1; }
 }
 
-/* Marquee: edges fade, pauses on hover. */
-.marquee-mask {
-  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
-}
-.marquee-track:hover { animation-play-state: paused; }
-
 /* ---------- Motion ---------- */
 
 :root {
@@ -153,8 +144,10 @@ body {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: none; }
 }
+/* `backwards`, not `both`: holding the end state leaves an identity transform
+   on the wrapper, which would trap position:fixed descendants inside it. */
 .page-in {
-  animation: page-in 0.5s var(--ease-out-expo) both;
+  animation: page-in 0.5s var(--ease-out-expo) backwards;
 }
 
 /* Hero entrance: children rise in one after another */
@@ -238,10 +231,75 @@ body {
   transition: transform 0.2s ease-out, opacity 0.35s ease 0.15s;
 }
 
+/* ---------- Home: scroll story ----------
+   StoryProgress writes --p (0 → 1) on each chapter. Without JS, or with reduced
+   motion, everything renders fully revealed. */
+
+.mile-num {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(6.5rem, 20vw, 15rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgb(255 255 255 / 0.35);
+  /* fills bottom-up between p = 0.05 and p = 0.55 */
+  background: linear-gradient(to top, #fff calc((var(--p, 1) - 0.05) * 200%), transparent 0);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.story-light .mile-num {
+  -webkit-text-stroke-color: rgb(17 17 17 / 0.35);
+  background-image: linear-gradient(to top, var(--color-ink) calc((var(--p, 1) - 0.05) * 200%), transparent 0);
+}
+
+/* Words light up one after another between p = 0.12 and p = 0.52 */
+.word-reveal .word {
+  opacity: clamp(0.2, calc((var(--p, 1) - 0.12) * 2.5 * var(--n) - var(--i)), 1);
+  transition: opacity 0.15s linear;
+}
+.story-light .word-reveal .word { opacity: clamp(0.25, calc((var(--p, 1) - 0.12) * 2.5 * var(--n) - var(--i)), 1); }
+
+/* The third mile turns: a chevron notch cut into the top edge */
+.story-light {
+  clip-path: polygon(0 0, 50% min(7vw, 90px), 100% 0, 100% 100%, 0 100%);
+  padding-top: min(7vw, 90px);
+}
+
+/* Floating progress "road" */
+.story-road {
+  position: absolute;
+  inset: 50% 22px auto 22px;
+  height: 1px;
+  background: linear-gradient(to right, #fff calc(var(--road, 0) * 100%), var(--color-line-strong) 0);
+}
+
+/* Intro road: dashed line that draws in */
+@keyframes road-draw {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+.road-line {
+  transform-origin: left;
+  animation: road-draw 1.6s var(--ease-out-expo) 0.4s both;
+  background-image: repeating-linear-gradient(to right, var(--color-line-strong) 0 14px, transparent 14px 24px);
+}
+@keyframes scroll-cue {
+  0% { transform: scaleY(0); transform-origin: top; }
+  45% { transform: scaleY(1); transform-origin: top; }
+  55% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.scroll-cue { animation: scroll-cue 2.2s var(--ease-out-expo) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .word-reveal .word { opacity: 1 !important; }
+  .mile-num { background-image: linear-gradient(#fff, #fff) !important; }
+  .story-light .mile-num { background-image: linear-gradient(var(--color-ink), var(--color-ink)) !important; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .marquee-track { animation: none !important; transform: none !important; flex-wrap: wrap; width: auto !important; }
-  .marquee-track [aria-hidden="true"] { display: none; }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-delay: 0ms !important;
